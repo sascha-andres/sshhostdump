@@ -33,6 +33,10 @@ func main() {
 	for scanner.Scan() {
 		configFile := scanner.Text()
 		file, err := os.OpenFile(configFile, os.O_RDONLY, 0400)
+		defer func() {
+			err := file.Close()
+			logrus.Errorf("error closing %s: %s", configFile, err)
+		}()
 		if err != nil {
 			logrus.Errorf("error reading config file %s:%s", configFile, err)
 			os.Exit(1)
