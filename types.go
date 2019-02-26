@@ -4,11 +4,13 @@ type (
 	// SSHMenu is the root type
 	SSHMenu struct {
 		Data DirectoryEntry `yaml:"root"`
+
+		separators string `yaml:"-"`
 	}
 
 	// DirectoryEntry are the entries at one level
 	DirectoryEntry struct {
-		Hosts       []string         `yaml:"hosts"`
-		Directories []DirectoryEntry `yaml:"directories"`
+		Hosts       []string                  `yaml:"hosts"`
+		Directories map[string]DirectoryEntry `yaml:"directories"`
 	}
 )
