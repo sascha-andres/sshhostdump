@@ -59,8 +59,9 @@ func (s *SSHMenu) addHost(host string, currentDirectory DirectoryEntry) (Directo
 		currentDirectory.Directories[splitted[0]] = result
 		return currentDirectory, err
 	}
-
-	currentDirectory.Hosts = append(currentDirectory.Hosts, host)
+	if host != "*" {
+		currentDirectory.Hosts = append(currentDirectory.Hosts, host)
+	}
 
 	return currentDirectory, nil
 }
