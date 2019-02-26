@@ -1,0 +1,14 @@
+package sshmenu
+
+type (
+	// SSHMenu is the root type
+	SSHMenu struct {
+		Data DirectoryEntry `yaml:"root"`
+	}
+
+	// DirectoryEntry are the entries at one level
+	DirectoryEntry struct {
+		Hosts       []string         `yaml:"hosts"`
+		Directories []DirectoryEntry `yaml:"directories"`
+	}
+)
