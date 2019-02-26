@@ -10,7 +10,7 @@ type (
 
 	// DirectoryEntry are the entries at one level
 	DirectoryEntry struct {
-		Hosts       []string                  `yaml:"hosts"`
+		Hosts       map[string]string         `yaml:"hosts"`
 		Directories map[string]DirectoryEntry `yaml:"directories"`
 	}
 )

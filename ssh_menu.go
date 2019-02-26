@@ -4,7 +4,7 @@ package sshmenu
 func NewSSHMenu(separators string) (*SSHMenu, error) {
 	entry := DirectoryEntry{
 		Directories: make(map[string]DirectoryEntry),
-		Hosts:       make([]string, 0),
+		Hosts:       make(map[string]string),
 	}
 	return &SSHMenu{
 		Data:       entry,

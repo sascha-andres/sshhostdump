@@ -22,9 +22,14 @@ Host two.server`))
 		t.Fail()
 	}
 
-	if s.Data.Hosts[0] != "test" {
-		t.Log("expected test to be a root level host")
+	if data, ok := s.Data.Hosts["test"]; !ok {
+		t.Log("no test host found")
 		t.Fail()
+	} else {
+		if data != "test" {
+			t.Logf("expected [test] got [%s]", data)
+			t.Fail()
+		}
 	}
 }
 

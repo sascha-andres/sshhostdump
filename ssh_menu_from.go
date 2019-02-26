@@ -29,7 +29,7 @@ func (s *SSHMenu) addHosts(entries []string) error {
 	}
 	for _, entry := range entries {
 		for _, host := range strings.Split(entry, " ") {
-			if result, err := s.addHost(host, s.Data); err != nil {
+			if result, err := s.addHost(host, s.Data, host); err != nil {
 				return err
 			} else {
 				s.Data = result
@@ -40,7 +40,7 @@ func (s *SSHMenu) addHosts(entries []string) error {
 }
 
 // addHost splits host and adds to data structure
-func (s *SSHMenu) addHost(host string, currentDirectory DirectoryEntry) (DirectoryEntry, error) {
+func (s *SSHMenu) addHost(host string, currentDirectory DirectoryEntry, connect string) (DirectoryEntry, error) {
 	for _, separator := range s.separators {
 		splitted := strings.Split(host, string(separator))
 		if len(splitted) == 1 {
@@ -49,18 +49,18 @@ func (s *SSHMenu) addHost(host string, currentDirectory DirectoryEntry) (Directo
 		var workingDirectory DirectoryEntry
 		if value, ok := currentDirectory.Directories[splitted[0]]; !ok {
 			workingDirectory = DirectoryEntry{
-				Hosts:       make([]string, 0),
+				Hosts:       make(map[string]string, 0),
 				Directories: make(map[string]DirectoryEntry, 0),
 			}
 		} else {
 			workingDirectory = value
 		}
-		result, err := s.addHost(strings.Join(splitted[1:], string(separator)), workingDirectory)
+		result, err := s.addHost(strings.Join(splitted[1:], string(separator)), workingDirectory, connect)
 		currentDirectory.Directories[splitted[0]] = result
 		return currentDirectory, err
 	}
 	if host != "*" {
-		currentDirectory.Hosts = append(currentDirectory.Hosts, host)
+		currentDirectory.Hosts[host] = connect
 	}
 
 	return currentDirectory, nil
