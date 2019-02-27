@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"livingit.de/code/sshmenu"
 	"os"
+	"syscall"
 )
 
 const version = "develop"
@@ -33,15 +34,12 @@ func main() {
 	for scanner.Scan() {
 		configFile := scanner.Text()
 		file, err := os.OpenFile(configFile, os.O_RDONLY, 0400)
-		defer func() {
-			err := file.Close()
-			logrus.Errorf("error closing %s: %s", configFile, err)
-		}()
 		if err != nil {
 			logrus.Errorf("error reading config file %s:%s", configFile, err)
 			os.Exit(1)
 		}
 		err = sshMenuData.FromReader(file)
+		_ = file.Close()
 		if err != nil {
 			logrus.Errorf("error getting host data: %s", err)
 			os.Exit(1)
@@ -59,4 +57,7 @@ func main() {
 
 	fmt.Println("ssh-menu")
 	fmt.Printf("version %s\n\n", version)
+
+	err = syscall.Exec("/usr/local/bin/ssh", []string{"halcon"}, nil)
+	logrus.Errorf("error: syscall failed: %s", err)
 }
