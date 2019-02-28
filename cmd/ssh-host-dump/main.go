@@ -4,24 +4,27 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"os"
+
 	"github.com/integrii/flaggy"
 	"github.com/sirupsen/logrus"
-	"livingit.de/code/sshmenu"
-	"os"
+	"livingit.de/code/sshhostdump"
 )
 
 const version = "develop"
 
 var (
-	sshMenuData sshmenu.SSHMenu
+	sshMenuData sshhostdump.SSHMenu
 )
 
 func main() {
 	printJSON := false
 	printLines := true
 	flat := true
+	showVersion := false
 	flaggy.Bool(&printJSON, "j", "json", "print host hierarchy as json")
 	flaggy.Bool(&printLines, "l", "lines", "print host hierarchy")
+	flaggy.Bool(&showVersion, "v", "version", "show version")
 	flaggy.Bool(&flat, "f", "flat", "print hosts with groups one at a line")
 	flaggy.Parse()
 
@@ -36,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	sshMenuData, err := sshmenu.NewSSHMenu("./")
+	sshMenuData, err := sshhostdump.NewSSHMenu("./")
 	if err != nil {
 		logrus.Errorf("error creating ssh menu data handler: %s", err)
 		os.Exit(1)
@@ -58,6 +61,12 @@ func main() {
 		}
 	}
 
+	if showVersion {
+		fmt.Println("ssh-menu")
+		fmt.Printf("version %s\n\n", version)
+		os.Exit(0)
+	}
+
 	if printJSON {
 		data, err := json.MarshalIndent(sshMenuData, "", " ")
 		if err != nil {
@@ -71,16 +80,11 @@ func main() {
 		printDirectory(sshMenuData.Data)
 	}
 
-	if false {
-		fmt.Println("ssh-menu")
-		fmt.Printf("version %s\n\n", version)
-	}
-
-	//err = syscall.Exec("/usr/local/bin/ssh", []string{"halcon"}, nil)
-	//logrus.Errorf("error: syscall failed: %s", err)
 }
 
-func printDirectory(directory sshmenu.DirectoryEntry) {
+// printDirectory prints out all hosts in a directory and
+// for each directory calls printDirectory
+func printDirectory(directory sshhostdump.DirectoryEntry) {
 	for _, val := range directory.Hosts {
 		fmt.Println(val)
 	}

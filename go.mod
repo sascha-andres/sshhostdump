@@ -1,4 +1,4 @@
-module livingit.de/code/sshmenu
+module livingit.de/code/sshhostdump
 
 go 1.12
 

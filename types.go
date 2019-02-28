@@ -1,4 +1,4 @@
-package sshmenu
+package sshhostdump
 
 type (
 	// SSHMenu is the root type

@@ -1,4 +1,4 @@
-package sshmenu
+package sshhostdump
 
 // NewSSHMenu creates a new instance of SSH menu
 func NewSSHMenu(separators string) (*SSHMenu, error) {

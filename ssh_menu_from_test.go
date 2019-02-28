@@ -1,4 +1,4 @@
-package sshmenu
+package sshhostdump
 
 import (
 	"strings"
