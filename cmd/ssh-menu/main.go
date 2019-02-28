@@ -8,15 +8,27 @@ import (
 	"github.com/sirupsen/logrus"
 	"livingit.de/code/sshmenu"
 	"os"
-	"syscall"
 )
 
 const version = "develop"
 
+var (
+	sshMenuData sshmenu.SSHMenu
+)
+
 func main() {
 	printJSON := false
+	printLines := true
+	flat := true
 	flaggy.Bool(&printJSON, "j", "json", "print host hierarchy as json")
+	flaggy.Bool(&printLines, "l", "lines", "print host hierarchy")
+	flaggy.Bool(&flat, "f", "flat", "print hosts with groups one at a line")
 	flaggy.Parse()
+
+	if printLines && printJSON {
+		logrus.Error("lines and json are mutually exclusive")
+		os.Exit(1)
+	}
 
 	stat, _ := os.Stdin.Stat()
 	if !((stat.Mode() & os.ModeCharDevice) == 0) {
@@ -55,9 +67,25 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Println("ssh-menu")
-	fmt.Printf("version %s\n\n", version)
+	if printLines {
+		printDirectory(sshMenuData.Data)
+	}
 
-	err = syscall.Exec("/usr/local/bin/ssh", []string{"halcon"}, nil)
-	logrus.Errorf("error: syscall failed: %s", err)
+	if false {
+		fmt.Println("ssh-menu")
+		fmt.Printf("version %s\n\n", version)
+	}
+
+	//err = syscall.Exec("/usr/local/bin/ssh", []string{"halcon"}, nil)
+	//logrus.Errorf("error: syscall failed: %s", err)
+}
+
+func printDirectory(directory sshmenu.DirectoryEntry) {
+	for _, val := range directory.Hosts {
+		fmt.Println(val)
+	}
+
+	for _, val := range directory.Directories {
+		printDirectory(val)
+	}
 }
