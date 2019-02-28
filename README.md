@@ -1,7 +1,7 @@
 # SSH menu
 
-parses SSH config files and prints a menu to select to which server to connect
+parses SSH config files and prints hosts to commandline
 
 ## Usage
 
-    ls config/ | ssh-menu
+    ssh (ag --files-with-matches --hidden --unrestricted Host ~/.ssh/ | ssh-host-dump | peco)
