@@ -22,11 +22,20 @@ func main() {
 	printLines := true
 	flat := true
 	showVersion := false
+
 	flaggy.Bool(&printJSON, "j", "json", "print host hierarchy as json")
 	flaggy.Bool(&printLines, "l", "lines", "print host hierarchy")
 	flaggy.Bool(&showVersion, "v", "version", "show version")
 	flaggy.Bool(&flat, "f", "flat", "print hosts with groups one at a line")
+
+	flaggy.DefaultParser.ShowVersionWithVersionFlag = false
 	flaggy.Parse()
+
+	if showVersion {
+		fmt.Println("ssh-menu")
+		fmt.Printf("version %s\n\n", version)
+		os.Exit(0)
+	}
 
 	if printLines && printJSON {
 		logrus.Error("lines and json are mutually exclusive")
@@ -59,12 +68,6 @@ func main() {
 			logrus.Errorf("error getting host data: %s", err)
 			os.Exit(1)
 		}
-	}
-
-	if showVersion {
-		fmt.Println("ssh-menu")
-		fmt.Printf("version %s\n\n", version)
-		os.Exit(0)
 	}
 
 	if printJSON {
