@@ -8,15 +8,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/sirupsen/logrus"
 	"livingit.de/code/sshhostdump"
 )
 
 const version = "develop"
 
 var (
-	sshMenuData sshhostdump.SSHMenu
-
 	printJSON   bool
 	printLines  bool
 	flat        bool
@@ -31,6 +28,9 @@ func init() {
 }
 
 func main() {
+	log.SetPrefix("[ssh-host-dump] ")
+	log.SetFlags(log.LstdFlags | log.LUTC)
+
 	flag.Parse()
 	if !flag.Parsed() {
 		log.Fatal("flags have not been parsed")
@@ -43,20 +43,17 @@ func main() {
 	}
 
 	if printLines && printJSON {
-		logrus.Error("lines and json are mutually exclusive")
-		os.Exit(1)
+		log.Fatal("lines and json are mutually exclusive")
 	}
 
 	stat, _ := os.Stdin.Stat()
 	if !((stat.Mode() & os.ModeCharDevice) == 0) {
-		_, _ = fmt.Fprintln(os.Stderr, "expecting list of config files to be piped")
-		os.Exit(1)
+		log.Fatal("expecting list of config files to be piped")
 	}
 
 	sshMenuData, err := sshhostdump.NewSSHMenu("./")
 	if err != nil {
-		logrus.Errorf("error creating ssh menu data handler: %s", err)
-		os.Exit(1)
+		log.Fatalf("error creating ssh menu data handler: %s", err)
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -64,14 +61,12 @@ func main() {
 		configFile := scanner.Text()
 		file, err := os.OpenFile(configFile, os.O_RDONLY, 0400)
 		if err != nil {
-			logrus.Errorf("error reading config file %s:%s", configFile, err)
-			os.Exit(1)
+			log.Fatalf("error reading config file %s:%s", configFile, err)
 		}
 		err = sshMenuData.FromReader(file)
 		_ = file.Close()
 		if err != nil {
-			logrus.Errorf("error getting host data: %s", err)
-			os.Exit(1)
+			log.Fatalf("error getting host data: %s", err)
 		}
 	}
 
