@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/sascha-andres/flag"
+	"log"
 	"os"
 
-	"github.com/integrii/flaggy"
 	"github.com/sirupsen/logrus"
 	"livingit.de/code/sshhostdump"
 )
@@ -15,21 +16,25 @@ const version = "develop"
 
 var (
 	sshMenuData sshhostdump.SSHMenu
+
+	printJSON   bool
+	printLines  bool
+	flat        bool
+	showVersion bool
 )
 
+func init() {
+	flag.BoolVar(&printJSON, "json", false, "print host hierarchy as json")
+	flag.BoolVar(&printLines, "lines", true, "print host hierarchy")
+	flag.BoolVar(&showVersion, "version", false, "show version")
+	flag.BoolVar(&flat, "flat", false, "print hosts with groups one at a line")
+}
+
 func main() {
-	printJSON := false
-	printLines := true
-	flat := true
-	showVersion := false
-
-	flaggy.Bool(&printJSON, "j", "json", "print host hierarchy as json")
-	flaggy.Bool(&printLines, "l", "lines", "print host hierarchy")
-	flaggy.Bool(&showVersion, "v", "version", "show version")
-	flaggy.Bool(&flat, "f", "flat", "print hosts with groups one at a line")
-
-	flaggy.DefaultParser.ShowVersionWithVersionFlag = false
-	flaggy.Parse()
+	flag.Parse()
+	if !flag.Parsed() {
+		log.Fatal("flags have not been parsed")
+	}
 
 	if showVersion {
 		fmt.Println("ssh-menu")
