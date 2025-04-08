@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/sascha-andres/flag"
 	"log"
 	"os"
+
+	"github.com/sascha-andres/reuse/flag"
 
 	"livingit.de/code/sshhostdump"
 )
@@ -21,6 +22,7 @@ var (
 )
 
 func init() {
+	flag.SetEnvPrefix("SSH_HOST_DUMP")
 	flag.BoolVar(&printJSON, "json", false, "print host hierarchy as json")
 	flag.BoolVar(&printLines, "lines", true, "print host hierarchy")
 	flag.BoolVar(&showVersion, "version", false, "show version")

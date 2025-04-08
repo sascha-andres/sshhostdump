@@ -1,5 +1,5 @@
 module livingit.de/code/sshhostdump
 
-go 1.12
+go 1.24
 
-require github.com/sascha-andres/flag v0.1.0
+require github.com/sascha-andres/reuse v0.8.1
