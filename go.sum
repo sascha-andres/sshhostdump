@@ -1,2 +1,4 @@
 github.com/sascha-andres/reuse v0.8.1 h1:jt0m8DnRDp6q/X2xoDEKh7+cG/rIu92ShNqnVwx3CgE=
 github.com/sascha-andres/reuse v0.8.1/go.mod h1:qyqrqy/xJOha4jtGO0YobTAbb/xRcjfZ3is8oFZlCgs=
+github.com/sascha-andres/reuse v0.14.0 h1:KgH+EOi2yOem2rr16Gjv4cQNxlYGb1smO/bskMn9uD8=
+github.com/sascha-andres/reuse v0.14.0/go.mod h1:Lk827OqHfxvVQNPvJCONQl3Gr1s2y9fn6Tq46BmR9ak=
